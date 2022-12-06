@@ -2,10 +2,8 @@ import {
     makeStyles,
 } from '@material-ui/core'
 import Konva from 'konva';
-import { Vector2d } from 'konva/lib/types';
-import { forwardRef, useContext, useLayoutEffect } from 'react';
-import { targetType,connectorsType } from '../interface/canvasContainer';
-import React, { useRef, useState, useImperativeHandle } from 'react';
+import { forwardRef, useContext} from 'react';
+import {useImperativeHandle } from 'react';
 import { Stage } from 'konva/lib/Stage';
 import { Layer } from 'konva/lib/Layer';
 import { Group } from 'konva/lib/Group';
@@ -14,7 +12,7 @@ import { Context } from './index';
 
 const useStyles = makeStyles(() => ({
     convasContainer:{
-        border: '1px solid green',
+        // border: '1px solid green',
         height: '100%'
     }
 }));
@@ -26,13 +24,10 @@ let group: Group | Shape<ShapeConfig> | null = null
 const dataFormat =(data: any) => {
     let dataString:string = ''
     for (let [key, value] of Object.entries(data)){
-        // console.log(key, value)
         dataString += `${key}:${value}\n`
     }
     return dataString
 }
-
-
 
 const saveCanvas = () => {
     let canvasData = stage?.toJSON();
@@ -44,7 +39,7 @@ export const CanvaContainer = forwardRef((props: any, ref: any) => {
     let { canvasClick } = props;
     
     const createPlant = (data: any) => {
-        let {width, height} = data
+        let {Length:width, Width:height} = data
         width = Number(width)
         height = Number(height)
         let Cwidth = document.getElementById('canvas-container')?.clientWidth
@@ -70,45 +65,47 @@ export const CanvaContainer = forwardRef((props: any, ref: any) => {
         var borderLine = new Konva.Line({
           points: [0, 0, width, 0, width, height, 0, height, 0, 0],
           stroke: 'black',
-          strokeWidth: 2    ,
+          strokeWidth: 1,
           lineCap: 'round',
           lineJoin: 'round'
         });
         layer.add(group)
         group.add(borderLine)
         stage.add(layer);
-        stage.on("wheel", (e) => {
-            var max = 4;   // 放大最大的比例
-            var min = 0.5; // 缩小最小的比例
-            var step = 0.03; // 每次缩放的比例
+        // stage.on("wheel", (e) => {
+        //     var max = 4;   // 放大最大的比例
+        //     var min = 0.5; // 缩小最小的比例
+        //     var step = 0.03; // 每次缩放的比例
          
-            const x = e.evt.offsetX;
-            const y = e.evt.offsetY;
+        //     const x = e.evt.offsetX;
+        //     const y = e.evt.offsetY;
          
-            var offsetX = (x - (layer as any).offsetX()) * (layer as any).scaleX() / ((layer as any).scaleX() - step) - (x - (layer as any).offsetX());
-            var offsetY = (y - (layer as any).offsetY()) * (layer as any).scaleY() / ((layer as any).scaleY() - step) - (y - (layer as any).offsetY());
-            console.log(888,(layer as any).scaleY((layer as any).scaleY() + step) )
-            if ((e.evt as any)?.wheelDelta) {
-                if ((e.evt as any)?.wheelDelta > 0) { 
-                    // 放大
-                    if((layer as any).scaleX() < max && (layer as any).scaleY() < max){
-                        (layer as any).scaleX((layer as any).scaleX() + step); 
-                        (layer as any).scaleY((layer as any).scaleY() + step)
-                        (layer as any).move({x:-offsetX, y:-offsetY}); // 跟随鼠标偏移位置
-                    }
-                } else {
-                    // 缩小
-                    if((layer as any).scaleX() > min && (layer as any).scaleY() > min){
-                        (layer as any).scaleX((layer as any).scaleX() - step);
-                        (layer as any).scaleY((layer as any).scaleY() - step);
-                        (layer as any).move({x:offsetX, y:offsetY}); // 跟随鼠标偏移位置
-                    }
-                }
-            }
-        })
+        //     var offsetX = (x - (layer as any).offsetX()) * (layer as any).scaleX() / ((layer as any).scaleX() - step) - (x - (layer as any).offsetX());
+        //     var offsetY = (y - (layer as any).offsetY()) * (layer as any).scaleY() / ((layer as any).scaleY() - step) - (y - (layer as any).offsetY());
+        //     console.log(888,(layer as any).scaleY((layer as any).scaleY() + step) )
+        //     if ((e.evt as any)?.wheelDelta) {
+        //         if ((e.evt as any)?.wheelDelta > 0) { 
+        //             // 放大
+        //             if((layer as any).scaleX() < max && (layer as any).scaleY() < max){
+        //                 (layer as any).scaleX((layer as any).scaleX() + step); 
+        //                 (layer as any).scaleY((layer as any).scaleY() + step)
+        //                 (layer as any).move({x:-offsetX, y:-offsetY}); // 跟随鼠标偏移位置
+        //             }
+        //         } else {
+        //             // 缩小
+        //             if((layer as any).scaleX() > min && (layer as any).scaleY() > min){
+        //                 (layer as any).scaleX((layer as any).scaleX() - step);
+        //                 (layer as any).scaleY((layer as any).scaleY() - step);
+        //                 (layer as any).move({x:offsetX, y:offsetY}); // 跟随鼠标偏移位置
+        //             }
+        //         }
+        //     }
+        // })
     }
     const createDTY = (data: any) => {
-        let {width : DTYWidth, height : DTYHeight, leftDS,topDS} = data
+        let {Length : DTYWidth, Width : DTYHeight} = data
+        let leftDS = 0
+        let topDS = 0
         DTYWidth = Number(DTYWidth)
         DTYHeight = Number(DTYHeight)
         leftDS = Number(leftDS)
@@ -138,15 +135,15 @@ export const CanvaContainer = forwardRef((props: any, ref: any) => {
         rectGroup.on('click',(e)=>{
             setType('edit')
             setEditRectGroup(rectGroup)
-            canvasClick()
+            canvasClick(data)
         })
         
         const dataText = dataFormat(data)
         var textArgs = new Konva.Text({
-            x: leftDS + 10,
-            y: topDS + 10,
+            x: leftDS + 1,
+            y: topDS + 1,
             text: dataText,
-            fontSize: 15,
+            fontSize: 12,
             fontFamily: 'Calibri',
             fill: 'black'
           });

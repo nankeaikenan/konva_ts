@@ -1,0 +1,30 @@
+{
+    "modelTemplatePropertyMappings": [
+        {
+            "id": 0,
+            "templateId": "string",
+            "propertyId": "1",
+            "modelTemplateProperty": {
+            "id": "string",
+            "name": "Length",
+            "defaultValue": "100",
+            "description": "string",
+            "enable": true,
+            "isSystemProperty": true
+            }
+        },
+        {
+            "id": 0,
+            "templateId": "string",
+            "propertyId": "2",
+            "modelTemplateProperty": {
+            "id": "string",
+            "name": "Width",
+            "defaultValue": "100",
+            "description": "string",
+            "enable": true,
+            "isSystemProperty": true
+            }
+        }
+    ]
+}
