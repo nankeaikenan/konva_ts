@@ -25,6 +25,19 @@
             "enable": true,
             "isSystemProperty": true
             }
+        },
+        {
+            "id": 0,
+            "templateId": "string",
+            "propertyId": "3",
+            "modelTemplateProperty": {
+            "id": "string",
+            "name": "sortNo",
+            "defaultValue": "1",
+            "description": "string",
+            "enable": true,
+            "isSystemProperty": true
+            }
         }
     ]
 }

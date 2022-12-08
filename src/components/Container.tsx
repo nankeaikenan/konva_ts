@@ -1,4 +1,4 @@
-import {CanvaContainer} from './CanvaContainer'
+import {CanvaContainerRK} from './CanvaContainerRK'
 import {
     Box,
     Button, 
@@ -47,7 +47,9 @@ export default function Container() {
     const [DTYLists, setDTYLists] = useState(null)
     const [DTYProList, setDTYProList] = useState([])
     const [pProList, setPProList] = useState([])
-
+    // 工厂状态（创建/编辑）
+    let [plantStatus, setPlantStatus] = useState('plantCreate')
+    
     // 获取DTY和plant的ID以及获取plant和DTY的模板属性
     const getModleTempalteTypeAndPros = async () => {
         // const {data} = await getModelTemplateEntities({type:''}, accessToken)
@@ -86,6 +88,14 @@ export default function Container() {
             setValue(v.name, v.value)
         });
         
+    }
+    // 工厂编辑回调
+    const handlePlantClick = (plantValues: any) => {
+        for(let v of Object.entries(plantValues)){
+            setValue(v[0], v[1])
+        }
+        setPlantStatus('plantEdit')
+        setPlantOpen(true)
     }
     const createPlantLists = (plantProTemProsLists: any) => {
         let pTempProList:any = []
@@ -153,11 +163,14 @@ export default function Container() {
     }
     
     const setPlantArg = (data: any) => {
-       
         if(convasRef.current){
-            console.log('data', data);
-            (convasRef.current as any).createPlant(data)
+            if(plantStatus === 'plantCreate'){
+                (convasRef.current as any).createPlant(data)
+            }else{
+                (convasRef.current as any).editPlant(data)
+            }   
         }
+        setPlantStatus('plantCretate')
         setPlantOpen(false);
         if(btnDisable){
             setBtnDisable(false)
@@ -169,15 +182,18 @@ export default function Container() {
     const setDTYArg = (data: any) => {
         setCopyData(data)
         if(convasRef.current){
-            console.log('dtydata', data);
-            (convasRef.current as any).createDTY(data)
+            if(type === 'create'){
+                (convasRef.current as any).createDTY(data)
+            }else{
+                (convasRef.current as any).editDTY(data)
+            }   
             setType('create')
             setDTYOpen(false);
             if(copyDisable){
                 setCopyDisable(false)
             }
         }        
-    } 
+    }  
     const copyHanedle = () => {
         if(convasRef.current){
             (convasRef.current as any).createDTY(copyData)
@@ -198,12 +214,14 @@ export default function Container() {
         }    
     }
 
-    const handleCanvasClick = (data: any) => {
-        console.log('handleCanvasClick', data)
+    const handleCanvasClick = (editValue: any) => {
+        for(let v of Object.entries(editValue)){
+            setValue(v[0], v[1])
+        }
         setDTYOpen(true)
-        createDTYLists(DTYProTemPros)
     }
     const hanelePlantOpen = () => {
+        setPlantStatus('plantCreate')
         setDefaultOrEditValue(pProList)
         setPlantOpen(true)
     }
@@ -222,7 +240,11 @@ export default function Container() {
             </Box>
             <Box className={classes.canvasBox}>
                 
-                <CanvaContainer canvasClick={(data: any) => handleCanvasClick(data)}  ref={convasRef}/>
+                <CanvaContainerRK 
+                    plantClick = { (data: any) => handlePlantClick(data) }
+                    DTYClick={(data: any) => handleCanvasClick(data)}  
+                    ref={convasRef}
+                />
             </Box>
             <Dialog open={plantOpen} onClose={cancleCreatePlant} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Plant Setting</DialogTitle>
