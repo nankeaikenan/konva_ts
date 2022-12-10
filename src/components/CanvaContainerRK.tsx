@@ -1,7 +1,7 @@
 import {
     makeStyles,
 } from '@material-ui/core'
-import { useState,forwardRef, useContext, useRef} from 'react';
+import { useState,forwardRef, useContext, useRef, useEffect} from 'react';
 import {useImperativeHandle } from 'react';
 import { Context } from './index';
 import { Stage, Layer, Group, Rect, Text, Circle, Line } from 'react-konva';
@@ -32,17 +32,46 @@ export const CanvaContainerRK = forwardRef((props: any, ref: any) => {
     let cHeight = document.getElementById('canvas-container')?.clientHeight
     const {type, setType, editRect, setEditRect} = useContext(Context);
     let { DTYClick, plantClick } = props;
-
+    const stageRef = useRef(null)
+    const linesRef = useRef(null)
+    
     const [plantIfCreated, setPlantIfCreated] = useState(false)
     const [plantGroupArg, setPlantGroupArg] = useState({})
     const [plantLineBorderArg, setPlantLineBorderArg] = useState({})
     const [plantEidtRectArg, setPlantEidtRectArg] = useState({})
     const [plantEidtTextArg, setPlantEidtTextArg] = useState({})
+
     // 保存每次plant创建的值
     const [editStatusPlantData, setEditStatusPlantData] = useState({})
     // DTY数组
     const [DTYArr, setDTYArr] = useState<any[]>([])
 
+
+    const saveCanvas = () => {
+        let saveData: any= {
+            plantGroupArg,
+            DTYArr,
+            plantEidtRectArg,
+            plantLineBorderArg,
+            plantEidtTextArg
+        }
+        localStorage.setItem('saveData', JSON.stringify(saveData));
+        localStorage.setItem('DTYData', DTYArr as any);
+    }
+    const importCanvas = () => {
+        let saveData = JSON.parse((localStorage.getItem('saveData')) as any);
+        setPlantIfCreated(true)
+        setPlantGroupArg((saveData as any)?.plantGroupArg)
+        setDTYArr((saveData as any)?.DTYArr)
+        setPlantEidtRectArg((saveData as any)?.plantEidtRectArg)
+        setPlantLineBorderArg((saveData as any)?.plantLineBorderArg)
+        setPlantEidtTextArg((saveData as any)?.plantEidtTextArg)
+       
+                
+    }
+    // 绘制的Line
+    const [newLine, setNewLine] =  useState<any>(null)
+    const [lineArr, setLineArr] =  useState<any[]>([])
     // 创建工厂
     const createPlant = (data: any) => {
         setPlantIfCreated(true)
@@ -158,7 +187,7 @@ export const CanvaContainerRK = forwardRef((props: any, ref: any) => {
         }
         let pointXYs = [top, right, bottom, left]
         let pointsList = nameList.map((v, i) => {
-            let pointArg = {
+            let pointArg: any = {
                 ...pointXYs[i],
                 name: v + DTYArr.length,
                 fill:'red',
@@ -168,29 +197,40 @@ export const CanvaContainerRK = forwardRef((props: any, ref: any) => {
             }
             return pointArg
         })
-        let newDTY = <Group key={DTYArr.length} {...DTYGroupArg} >
-                        <Text {...DTYText}></Text>
-                        <Rect {...DTYRect} onClick={(e) => handleDTYClick(data, e)}></Rect>
-                        {pointsList.map(v => <Circle 
-                                                key={v.name} 
-                                                {...v}
-                                                onClick={(e) => handleClickPoint(e)}
-                                                onMouseEnter={(e) => handleEnterPoint(e)}
-                                                onMouseLeave={(e) => handleLeavePoint(e)}
-                                                onMouseDown = {(e) => handleDownPoint(e)}
-                                                onMouseUp = {(e) => handleUpPoint(e)}
-                                            ></Circle>)}
-                      </Group>   
+
+        let newDTY = {
+            data,
+            DTYGroupArg,
+            DTYRect,
+            DTYText,
+            pointsList
+        }
+        // let newDTY = <Group key={DTYArr.length} {...DTYGroupArg} >
+        //         <Text {...DTYText}></Text>
+        //         <Rect {...DTYRect} onClick={(e) => handleDTYClick(data, e)}></Rect>
+        //         {pointsList.map(v => <Circle 
+        //                                 key={v.name} 
+        //                                 {...v}
+        //                                 onClick={(e) => handleClickPoint(e)}
+        //                                 onMouseEnter={(e) => handleEnterPoint(e)}
+        //                                 onMouseLeave={(e) => handleLeavePoint(e)}
+        //                                 onMouseDown = {(e) => handleDownPoint(e)}
+        //                                 onMouseUp = {(e) => handleUpPoint(e)}
+        //                             ></Circle>)}
+        //       </Group>   
         setDTYArr([...DTYArr,  newDTY])
+        console.log(DTYArr)
     }
     // DTY点击编辑
     const handleDTYClick = (data:any, e:any) => {
+        console.log('DTY',e.target.absolutePosition(), e.target.parent.position())
         setType('edit')
         setEditRect(e.target)
         DTYClick(data)
     }
     // 编辑DTY
     const editDTY = (data: any) => {
+        
         // // DTY大小编辑
         let {Length : DTYWidth, Width : DTYHeight} = data
         DTYWidth = Number(DTYWidth)
@@ -210,9 +250,11 @@ export const CanvaContainerRK = forwardRef((props: any, ref: any) => {
     // 统一处理鼠标事件中点的parent和grandparent node的拖拽属性
     const entityDraggableSetting = (e: Event & { target: Element }, status: boolean) => {
         let pointEntityParentGroup = (e.target as any).parent
-        let plantEntityGroup = pointEntityParentGroup.parent
-        pointEntityParentGroup.draggable(status)
-        plantEntityGroup.draggable(status)
+        // let plantEntityGroup = pointEntityParentGroup.parent
+        pointEntityParentGroup.draggable(status);
+        // plantEntityGroup.draggable(status)
+        // console.log(pointEntityParentGroup.draggable());
+        (stageRef.current as any).draggable(status)
     }
     // 圆点移入事件
      const handleEnterPoint = (e: any) => {
@@ -229,40 +271,96 @@ export const CanvaContainerRK = forwardRef((props: any, ref: any) => {
         pointEntity.stroke('black')
         entityDraggableSetting(e, true)
     }
-    // 鼠标落下事件
+    // 鼠标落下事件,存全局变量lineaArrG，闭包中lineArr不会更新
     const handleDownPoint = (e: any) => {
-        console.log(11)
         entityDraggableSetting(e, false)
+        let pointEntity = e.target
+        // 获取鼠标落点
+        const pointEntityClickPos = (stageRef.current as any).getPointerPosition()
+        let pointXY = pointEntity.absolutePosition()
+        // stage拖拽时坐标原点改变，修正线的偏移量
+        let stageX = (stageRef.current as any).x()
+        let stageY = (stageRef.current as any).y()
+        let points = [pointXY.x - stageX, pointXY.y-stageY, 
+            pointEntityClickPos.x- stageX, pointEntityClickPos.y-stageY]
+        let newLineArg = {
+            name: 'line' + lineArr.length,
+            stroke: 'black',
+            points
+        }
+        let newLineTem = <Line ref={linesRef} key={'newline' + lineArr.length} {...newLineArg}></Line>
+        setLineArr([...lineArr,newLineTem])
+        setNewLine(newLineTem)
+        
     }
-    // 鼠标抬起事件
+    // 鼠标移动事件
+    const handleMoveLine = (e: any) => {
+        let stageX = (stageRef.current as any).x()
+        let stageY = (stageRef.current as any).y()
+        let w = (stageRef.current as any).width()
+        let h = (stageRef.current as any).height()
+        // console.log('lineArr',stageX,stageY, w,h)
+        if(!newLine){
+            return
+        }
+        const pos = (stageRef.current as any).getPointerPosition();
+        const points = (linesRef.current as any).points().slice();
+        // let stageX = (stageRef.current as any).x()
+        // let stageY = (stageRef.current as any).y()
+        points[2] = pos.x - stageX;
+        points[3] = pos.y-stageY;
+        (linesRef.current as any).points(points);
+        
+    }
+    // 画线鼠标抬起事件
+    const handleUpStage = (e: any) => {
+        if(!newLine){
+            return
+        }
+        let name = e.target.name()
+        let ifOnPoint = name.indexOf('Point') == -1
+        if (ifOnPoint) {
+            (linesRef.current as any).destroy()
+            setLineArr(lineArr.filter((v,i) => i !== lineArr.length - 1))
+            setNewLine(null)
+        } else {
+            setNewLine(null)
+        }
+        
+    }
+    // 圆点鼠标抬起事件
     const handleUpPoint = (e: any) => {
-        console.log(222)
         entityDraggableSetting(e, true)
     }
     // 圆点点击事件
     const handleClickPoint = (e: any) => {
-        let pointEntity = e.target
-        // let pointEntityParentGroup = e.target.parent
-        // pointEntityParentGroup.draggable(true)
-        console.log(e.target)
-
     }
     const classes = useStyles();
         useImperativeHandle(ref, () => ({
             createPlant,
             editPlant,
             createDTY,
-            editDTY
+            editDTY,
+            saveCanvas,
+            importCanvas
         }));
     return (
         <div className={classes.convasContainer} id='canvas-container'>
-            <Stage width={cWidth} height={cHeight}>
-                <Layer>
+            <Stage 
+                draggable
+                width={cWidth} 
+                height={cHeight} 
+                ref={stageRef}
+                onMouseMove={(e) => handleMoveLine(e)}
+                onMouseUp={(e) => handleUpStage(e)}
+                >
+                <Layer >
                     {!plantIfCreated ? null:
                         <Group
                             id='plantId'
-                            draggable
+                            
                             {...plantGroupArg}
+                            
                         >
                             <Rect
                                 name='pEditRect'
@@ -292,10 +390,27 @@ export const CanvaContainerRK = forwardRef((props: any, ref: any) => {
                                 lineJoin='round'
                                 {...plantLineBorderArg}
                             ></Line>
-                        {DTYArr}
+                        {DTYArr.map((v, i) =>{
+                            return(
+                                <Group key={i} {...v.DTYGroupArg} >
+                                    <Text {...v.DTYText}></Text>
+                                    <Rect {...v.DTYRect} onClick={(e) => handleDTYClick(v.data, e)}></Rect>
+                                    {v.pointsList.map((pv: any) => <Circle 
+                                        key={pv.name} 
+                                        {...pv}
+                                        onClick={(e) => handleClickPoint(e)}
+                                        onMouseEnter={(e) => handleEnterPoint(e)}
+                                        onMouseLeave={(e) => handleLeavePoint(e)}
+                                        onMouseDown = {(e) => handleDownPoint(e)}
+                                        onMouseUp = {(e) => handleUpPoint(e)}
+                                    ></Circle>)}
+                                </Group>   
+                            )
+                        })}
                     </Group>
                     }
                 </Layer>
+                <Layer>{lineArr}</Layer>
             </Stage>
         </div>
         
