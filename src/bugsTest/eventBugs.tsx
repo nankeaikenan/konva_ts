@@ -4,6 +4,7 @@ export const EventBugs = () => {
 
     const [count, setCount] = useState<any>(0)
     const [tagArr, setTagArr] = useState<any>([])
+    let [arr, setArr] = useState<any>({x:0,y:0})
 
     const handleClicK = () => {
         console.log(count)
@@ -20,14 +21,26 @@ export const EventBugs = () => {
         </div>
          setTagArr([...tagArr, tags])
     }
+    const changeArr = () => {
+        
+        arr = {
+            x:1,
+            y:2
+        }
+        setArr(arr)
+    }
     useEffect(() => {
         console.log('useEffect',count)
     }, [count])
     return (
         <div>
+            <div>{arr.x}{arr.y}</div>
+            <button onClick={() => changeArr()}>changeArr</button>
             <div>{count}</div>
             <button onClick={() => addcount()}>add</button>
-            <button onClick={() => createTag()}>createTag</button>    
+            <br></br>
+            <button onClick={() => createTag()}>createTag</button>
+            <br></br>
             {tagArr}
         </div>
 

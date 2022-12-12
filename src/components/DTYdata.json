@@ -1,43 +1,131 @@
 {
-    "modelTemplatePropertyMappings": [
-        {
-            "id": 0,
-            "templateId": "string",
-            "propertyId": "1",
-            "modelTemplateProperty": {
-            "id": "string",
-            "name": "Length",
-            "defaultValue": "100",
-            "description": "string",
-            "enable": true,
-            "isSystemProperty": true
+    "retObj":{
+        "id":"d3decc5f-610c-44c6-9dbf-35e3bbdce1e3",
+        "type":"DTY",
+        "name":"DTY",
+        "description":"DTY",
+        "isSystemTemplate":false,
+        "modelTemplatePropertyMappings":[
+            {
+                "id":3,
+                "templateId":"d3decc5f-610c-44c6-9dbf-35e3bbdce1e3",
+                "propertyId":"c47b1223-a80a-4230-bba0-92933d433929",
+                "modelTemplateProperty":{
+                    "id":"c47b1223-a80a-4230-bba0-92933d433929",
+                    "name":"Length",
+                    "defaultValue":"111",
+                    "description":"Length",
+                    "enable":true,
+                    "isSystemProperty":true
+                }
+            },
+            {
+                "id":4,
+                "templateId":"d3decc5f-610c-44c6-9dbf-35e3bbdce1e3",
+                "propertyId":"e536da05-d90f-4ac4-b893-c0b37c65b790",
+                "modelTemplateProperty":{
+                    "id":"e536da05-d90f-4ac4-b893-c0b37c65b790",
+                    "name":"Width",
+                    "defaultValue":"111",
+                    "description":"Width",
+                    "enable":true,
+                    "isSystemProperty":true
+                }
+            },
+            {
+                "id":5,
+                "templateId":"d3decc5f-610c-44c6-9dbf-35e3bbdce1e3",
+                "propertyId":"7e04081a-f814-48b3-917f-af34d0b73a02",
+                "modelTemplateProperty":{
+                    "id":"7e04081a-f814-48b3-917f-af34d0b73a02",
+                    "name":"DtyNo",
+                    "defaultValue":"1",
+                    "description":"DtyNo",
+                    "enable":true,
+                    "isSystemProperty":true
+                }
+            },
+            {
+                "id":6,
+                "templateId":"d3decc5f-610c-44c6-9dbf-35e3bbdce1e3",
+                "propertyId":"385cb8e8-da2e-4506-9d31-0db179d2e7a5",
+                "modelTemplateProperty":{
+                    "id":"385cb8e8-da2e-4506-9d31-0db179d2e7a5",
+                    "name":"PosCount",
+                    "defaultValue":"384",
+                    "description":"PosCount",
+                    "enable":true,
+                    "isSystemProperty":true
+                }
+            },
+            {
+                "id":7,
+                "templateId":"d3decc5f-610c-44c6-9dbf-35e3bbdce1e3",
+                "propertyId":"8fdf1f39-913a-49f0-bc08-c2db78564992",
+                "modelTemplateProperty":{
+                    "id":"8fdf1f39-913a-49f0-bc08-c2db78564992",
+                    "name":"Area",
+                    "defaultValue":"Default",
+                    "description":"Area",
+                    "enable":true,
+                    "isSystemProperty":true
+                }
+            },
+            {
+                "id":8,
+                "templateId":"d3decc5f-610c-44c6-9dbf-35e3bbdce1e3",
+                "propertyId":"7305b4d2-64fd-476f-99d2-edd41b71688b",
+                "modelTemplateProperty":{
+                    "id":"7305b4d2-64fd-476f-99d2-edd41b71688b",
+                    "name":"WindingTime",
+                    "defaultValue":"720",
+                    "description":"WindingTime",
+                    "enable":true,
+                    "isSystemProperty":true
+                }
+            },
+            {
+                "id":9,
+                "templateId":"d3decc5f-610c-44c6-9dbf-35e3bbdce1e3",
+                "propertyId":"dadccf4f-fe85-4440-ad17-ec7ad56d8c31",
+                "modelTemplateProperty":{
+                    "id":"dadccf4f-fe85-4440-ad17-ec7ad56d8c31",
+                    "name":"DistanceOfMac",
+                    "defaultValue":"100",
+                    "description":"DistanceOfMac",
+                    "enable":true,
+                    "isSystemProperty":true
+                }
+            },
+            {
+                "id":10,
+                "templateId":"d3decc5f-610c-44c6-9dbf-35e3bbdce1e3",
+                "propertyId":"bd64411a-3b9f-4066-9850-5f9ba7c62bb0",
+                "modelTemplateProperty":{
+                    "id":"bd64411a-3b9f-4066-9850-5f9ba7c62bb0",
+                    "name":"SortNo",
+                    "defaultValue":"1",
+                    "description":"SortNo",
+                    "enable":true,
+                    "isSystemProperty":true
+                }
+            },
+            {
+                "id":11,
+                "templateId":"d3decc5f-610c-44c6-9dbf-35e3bbdce1e3",
+                "propertyId":"a5eff631-1e22-4abe-9f8b-feeff2ed5d43",
+                "modelTemplateProperty":{
+                    "id":"a5eff631-1e22-4abe-9f8b-feeff2ed5d43",
+                    "name":"RobotStandbyTimeAfterDoff",
+                    "defaultValue":"1",
+                    "description":"RobotStandbyTimeAfterDoff",
+                    "enable":true,
+                    "isSystemProperty":true
+                }
             }
-        },
-        {
-            "id": 0,
-            "templateId": "string",
-            "propertyId": "2",
-            "modelTemplateProperty": {
-            "id": "string",
-            "name": "Width",
-            "defaultValue": "100",
-            "description": "string",
-            "enable": true,
-            "isSystemProperty": true
-            }
-        },
-        {
-            "id": 0,
-            "templateId": "string",
-            "propertyId": "3",
-            "modelTemplateProperty": {
-            "id": "string",
-            "name": "sortNo",
-            "defaultValue": "1",
-            "description": "string",
-            "enable": true,
-            "isSystemProperty": true
-            }
-        }
-    ]
+        ]
+    },
+    "retCode":"Success",
+    "retMsg":"操作成功！",
+    "exception":null
 }

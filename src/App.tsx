@@ -1,7 +1,7 @@
 
 import './App.css';
 import {FactoryConfiguration} from './components/index'
-// import {EventBugs} from './bugsTest/eventBugs'
+import {EventBugs} from './bugsTest/eventBugs'
 
 function App() {
   return (

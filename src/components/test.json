@@ -1,0 +1,60 @@
+{
+    "id": "string",
+    "modelTemplateId": "string",
+    "name": "string",
+    "parentId": "string",
+    "description": "string",
+    "modelInstanceProperties": [
+      {
+        "id": "string",
+        "modelInstanceId": "string",
+        "templatePropertyId": "string",
+        "propertyName": "string",
+        "propertyValue": "string",
+        "modelTemplateProperty": {
+          "id": "string",
+          "name": "string",
+          "defaultValue": "string",
+          "description": "string",
+          "enable": true,
+          "isSystemProperty": true
+        }
+      }
+    ],
+    "modelInstanceRelation": [
+      {
+        "id": 0,
+        "parentInstanceId": "string",
+        "fromInstanceId": "string",
+        "toInstanceId": "string",
+        "length": 0,
+        "fromInstance": "string",
+        "toInstance": "string"
+      }
+    ],
+    "modelTemplate": {
+      "id": "string",
+      "type": "string",
+      "name": "string",
+      "description": "string",
+      "isSystemTemplate": true,
+      "modelTemplatePropertyMappings": [
+        {
+          "id": 0,
+          "templateId": "string",
+          "propertyId": "string",
+          "modelTemplateProperty": {
+            "id": "string",
+            "name": "string",
+            "defaultValue": "string",
+            "description": "string",
+            "enable": true,
+            "isSystemProperty": true
+          }
+        }
+      ]
+    },
+    "subModelInstances": [
+      "string"
+    ]
+  }

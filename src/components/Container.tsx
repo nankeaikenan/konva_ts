@@ -35,7 +35,7 @@ export default function Container() {
     // const { accessToken } = useToken()
     const {type, setType} = useContext(Context);
     const classes = useStyles();
-    const convasRef = useRef(null);
+    const convasRef: any = useRef(null);
     const [plantOpen, setPlantOpen] = useState(false);
     const [DTYOpen, setDTYOpen] = useState(false);
     const [copyDisable, setCopyDisable] = useState(true);
@@ -165,9 +165,9 @@ export default function Container() {
     const setPlantArg = (data: any) => {
         if(convasRef.current){
             if(plantStatus === 'plantCreate'){
-                (convasRef.current as any).createPlant(data)
+                convasRef.current?.createPlant(data)
             }else{
-                (convasRef.current as any).editPlant(data)
+                convasRef.current?.editPlant(data)
             }   
         }
         setPlantStatus('plantCretate')
@@ -182,12 +182,12 @@ export default function Container() {
     const setDTYArg = (data: any) => {
         setCopyData(data)
         if(convasRef.current){
-            if(type === 'create'){
-                (convasRef.current as any).createDTY(data)
-            }else{
-                (convasRef.current as any).editDTY(data)
-            }   
-            setType('create')
+            // if(type === 'create'){
+            //     convasRef.current?.createDTY(data)
+            // }else{
+            //     convasRef.current?.editDTY(data)
+            // }
+            convasRef.current?.createDTY(data)
             setDTYOpen(false);
             if(copyDisable){
                 setCopyDisable(false)
@@ -196,21 +196,21 @@ export default function Container() {
     }  
     const copyHanedle = () => {
         if(convasRef.current){
-            (convasRef.current as any).createDTY(copyData)
+            convasRef.current?.createDTY(copyData)
         } 
     }
     const cancleCreateDTY = () => {
-        setType('create')
+        // setType('create')
         setDTYOpen(false);
     }
     const saveHanedle = () => {
         if(convasRef.current){
-            (convasRef.current as any).saveCanvas()
+            convasRef.current?.saveCanvas()
         }    
     }
     const importHanedle = () => {
         if(convasRef.current){
-            (convasRef.current as any).importCanvas()
+            convasRef.current?.importCanvas()
         }    
     }
 
@@ -226,6 +226,7 @@ export default function Container() {
         setPlantOpen(true)
     }
     const haneleDTYOpen = () => {
+        setType('create')
         setDefaultOrEditValue(DTYProList)
         setDTYOpen(true)
     }
